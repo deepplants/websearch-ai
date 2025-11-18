@@ -16,7 +16,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from websearch import SearchResult, Settings, WebSearchPipeline
+from websearch_ai import SearchResult, Settings, WebSearchPipeline
 
 
 def export_json(results: list[SearchResult], answer: str, output_file: str):

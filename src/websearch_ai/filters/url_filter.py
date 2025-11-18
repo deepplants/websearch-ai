@@ -12,13 +12,19 @@ class URLFilter:
     """Filters and validates URLs."""
 
     def __init__(self, disallowed_domains: list[str]):
-        self.disallowed_domains = set(disallowed_domains)
+        # Normalize to lowercase for case-insensitive matching
+        self.disallowed_domains = {domain.lower() for domain in disallowed_domains}
 
     def is_allowed(self, url: str) -> bool:
         """Check if URL is allowed (not in disallowed list)."""
         try:
             parsed = urlparse(url)
             host = parsed.netloc.lower()
+
+            # Invalid URLs (no host) are not allowed
+            if not host:
+                return False
+
             return not any(domain in host for domain in self.disallowed_domains)
         except Exception as e:
             logger.warning(f"Failed to parse URL {url}: {e}")

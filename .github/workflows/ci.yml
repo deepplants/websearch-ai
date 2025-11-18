@@ -35,5 +35,5 @@ jobs:
 
       - name: Run tests
         run: |
-          uv run test
+          uv run pytest
 

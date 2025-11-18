@@ -2,7 +2,6 @@
 Data models for the web search pipeline.
 """
 
-
 from pydantic import BaseModel, Field
 
 

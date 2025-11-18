@@ -2,7 +2,7 @@
 Unit tests for URL filtering.
 """
 
-from websearch.filters import URLFilter
+from websearch_ai.filters import URLFilter
 
 
 class TestURLFilter:

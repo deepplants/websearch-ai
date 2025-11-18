@@ -4,7 +4,8 @@ Unit tests for data models.
 
 import pytest
 from pydantic import ValidationError
-from websearch.core import BetterQueries, SearchResult
+
+from websearch_ai.core import BetterQueries, SearchResult
 
 
 class TestSearchResult:

@@ -3,7 +3,8 @@ Unit tests for CacheManager.
 """
 
 import pytest
-from websearch.managers import CacheManager
+
+from websearch_ai.managers import CacheManager
 
 
 class TestCacheManager:

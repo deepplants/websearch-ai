@@ -5,7 +5,8 @@ Integration tests for the web search pipeline.
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
-from websearch import BetterQueries, SearchResult, WebSearchPipeline
+
+from websearch_ai import BetterQueries, SearchResult, WebSearchPipeline
 
 
 class TestWebSearchPipelineIntegration:
@@ -14,7 +15,7 @@ class TestWebSearchPipelineIntegration:
     @pytest.fixture
     def mock_llm_client(self):
         """Mock LLM client for testing."""
-        with patch("websearch.core.pipeline.LLMClient") as mock:
+        with patch("websearch_ai.core.pipeline.LLMClient") as mock:
             client = Mock()
             client.call_structured = AsyncMock(
                 return_value=BetterQueries(queries=["query 1", "query 2"])
@@ -26,7 +27,7 @@ class TestWebSearchPipelineIntegration:
     @pytest.fixture
     def mock_search_engine(self):
         """Mock search engine for testing."""
-        with patch("websearch.core.pipeline.SearchEngine") as mock:
+        with patch("websearch_ai.core.pipeline.SearchEngine") as mock:
             engine = Mock()
             engine.search = Mock(
                 return_value=[

@@ -3,7 +3,8 @@ Pytest configuration and shared fixtures.
 """
 
 import pytest
-from websearch.config import Settings
+
+from websearch_ai.config import Settings
 
 
 @pytest.fixture
@@ -42,7 +43,7 @@ def mock_settings(temp_cache_dir):
 @pytest.fixture
 def sample_search_results():
     """Sample search results for testing."""
-    from websearch.core import SearchResult
+    from websearch_ai.core import SearchResult
 
     return [
         SearchResult(

@@ -16,7 +16,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from websearch import Settings, WebSearchPipeline
+from websearch_ai import Settings, WebSearchPipeline
 
 
 async def run_single_benchmark(settings: Settings, query: str) -> dict:

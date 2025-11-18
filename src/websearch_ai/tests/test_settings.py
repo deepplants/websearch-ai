@@ -4,7 +4,8 @@ Unit tests for Settings configuration.
 
 import pytest
 from pydantic import ValidationError
-from websearch.config import Settings
+
+from websearch_ai.config import Settings
 
 
 class TestSettings:

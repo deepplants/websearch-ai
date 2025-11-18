@@ -2,9 +2,9 @@
 Unit tests for PromptManager.
 """
 
-
 import pytest
-from websearch.managers import PromptManager
+
+from websearch_ai.managers import PromptManager
 
 
 class TestPromptManager:

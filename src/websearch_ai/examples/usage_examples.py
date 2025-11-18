@@ -11,7 +11,7 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from websearch import Settings, WebSearchPipeline
+from websearch_ai import Settings, WebSearchPipeline
 
 
 async def example_basic():
