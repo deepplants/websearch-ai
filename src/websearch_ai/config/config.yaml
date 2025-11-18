@@ -1,0 +1,59 @@
+# Web Search Pipeline Configuration
+# All settings can be overridden via environment variables
+
+# OpenAI API Configuration
+openai:
+  api_key:  sk-svcacct-GD7ORF514tk2_Hxxuhdp2_MDbSYKJVAAMiYvCTlsxXnXG8bn75bbKOO1wuw7ENrbTu9ZNT3BlbkFJyosQWD80lyaL8MYhtM9LYVqvCDkIluK2lp5C0ClsApvus4PeeyUoFzK_l-n1D-xIRr69QA
+  # Set via OPENAI_API_KEY environment variable (required)
+  model: "gpt-4.1-nano"
+  temperature: 0.2
+
+# LLM Token Limits for different operations
+llm_tokens:
+  better_queries: 512
+  relevance_check: 100
+  summarize_content: 2048
+  merge_summaries: 4096
+  coverage_check: 1024
+
+# Search Configuration
+search:
+  max_results_per_query: 5  # Max results per individual search query
+  total_max_results: 12      # Total max results across all queries
+  num_better_queries: 10     # Number of improved queries to generate
+
+# HTTP Fetching Configuration
+fetching:
+  max_concurrent_fetches: 20
+  per_domain_delay: 0.8      # seconds between requests to same domain
+  fetch_timeout: 30          # seconds
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+  accept_encoding: "gzip, deflate, br"  # Exclude zstd to avoid decompression errors
+  max_content_chars: 8000    # Max characters to send to LLM for summarization
+
+# Filtering Configuration
+filtering:
+  min_relevance_score: 3     # Minimum relevance score (0-5) to keep a result
+  disallowed_domains:
+    - youtube.com
+    - youtu.be
+
+# Cache Configuration
+cache:
+  directory: "cache_async"
+  enabled: true
+
+# Proxy Configuration
+proxy:
+  use_proxies: false
+  proxies: []  # List of proxy URLs: ["http://user:pass@ip:port", ...]
+
+# Paths
+paths:
+  prompts_file: "prompts.yaml"  # Relative to this config file or absolute
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+

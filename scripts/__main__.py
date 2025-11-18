@@ -21,7 +21,7 @@ def test() -> None:
 def test_cov() -> None:
     """Run tests with coverage."""
     run_command(
-        ["pytest", "--cov=template_project", "--cov-report=html", "--cov-report=term-missing"],
+        ["pytest", "--cov=websearch_ai", "--cov-report=html", "--cov-report=term-missing"],
         "Tests with coverage",
     )
 

@@ -1,49 +1,75 @@
 [project]
-name = "template_project"
-version = "0.1.0"
-description = "A modern Python project template"
+name = "websearch-ai"
+version = "2.0.0"
+description = "Modular and configurable web search with LLM summarization"
 readme = "README.md"
-requires-python = ">=3.12"
-license = { text = "MIT" }
+requires-python = ">=3.10"
+license = "MIT"
 authors = [
     { name="Davide Palleschi", email="davide@deepplants.com" }
 ]
-keywords = []
+keywords = ["web-search", "llm", "summarization", "ai", "openai", "duckduckgo"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
 ]
-dependencies = [    
-    "pytest>=7.0",
-    "pytest-cov>=4.0",
-    "ruff>=0.1.6",  # Minimum version with stable formatter support
-    "pre-commit>=3.0",
-   ]
+
+dependencies = [
+    "openai>=1.0.0",
+    "pydantic>=2.0.0",
+    "aiohttp>=3.9.0",
+    "aiofiles>=23.0.0",
+    "pyyaml>=6.0",
+    "ddgs>=0.1.0",
+    "trafilatura>=1.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/deepplants/websearch-ai"
+Documentation = "https://github.com/deepplants/websearch-ai/blob/main/README.md"
+Repository = "https://github.com/deepplants/websearch-ai"
+Issues = "https://github.com/deepplants/websearch-ai/issues"
 
 [project.optional-dependencies]
-dev = []
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.21.0",
+    "ruff>=0.1.6",
+    "pre-commit>=3.0",
+]
 
 [build-system]
 requires = ["setuptools>=68", "wheel", "uv>=0.9.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["template_project", "scripts"]
+package-dir = {"" = "src"}
 
-[tool.setuptools.package-dir]
-"" = "src"
-"scripts" = "scripts"
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["websearch_ai*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+websearch_ai = [
+    "config/*.yaml",
+    "prompts/*.yaml",
+    "docs/*.md",
+]
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=template_project --cov-report=term-missing --cov-report=html"
-testpaths = ["tests"]
+addopts = "-ra -q --cov=websearch_ai --cov-report=term-missing --cov-report=html"
+testpaths = ["src/websearch_ai/tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 88
@@ -73,8 +99,4 @@ ignore = [
 ]
 
 [project.scripts]
-test = "scripts:test"
-test-cov = "scripts:test_cov"
-lint = "scripts:lint"
-format = "scripts:format_code"
-clean = "scripts:clean"
+websearch-ai = "websearch_ai.cli:main"

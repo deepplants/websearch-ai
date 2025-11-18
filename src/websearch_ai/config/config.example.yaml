@@ -1,0 +1,93 @@
+# Example Custom Configuration
+# Copy this file to config.yaml and customize as needed
+
+# OpenAI API Configuration
+openai:
+  api_key: null  # Set via OPENAI_API_KEY environment variable (required)
+  model: "gpt-4.1-nano"  # Options: gpt-4.1-nano, gpt-4o-mini, gpt-4, etc.
+  temperature: 0.2  # 0.0-2.0, lower = more deterministic
+
+# LLM Token Limits for different operations
+llm_tokens:
+  better_queries: 512      # Tokens for generating improved search queries
+  relevance_check: 100     # Tokens for checking relevance (returns a number 0-5)
+  summarize_content: 2048  # Tokens for summarizing each fetched page
+  merge_summaries: 4096    # Tokens for final answer synthesis
+  coverage_check: 1024     # Tokens for coverage analysis
+
+# Search Configuration
+search:
+  max_results_per_query: 5  # Max results per individual search query
+  total_max_results: 6      # Total max unique results to process
+  num_better_queries: 5     # Number of improved queries to generate
+
+# HTTP Fetching Configuration
+fetching:
+  max_concurrent_fetches: 20  # Maximum concurrent HTTP requests
+  per_domain_delay: 0.8       # Seconds between requests to same domain (be polite!)
+  fetch_timeout: 30           # HTTP request timeout in seconds
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+  accept_encoding: "gzip, deflate, br"  # Exclude zstd to avoid decompression errors
+  max_content_chars: 8000     # Max characters to send to LLM for summarization
+
+# Filtering Configuration
+filtering:
+  min_relevance_score: 3  # Minimum relevance score (0-5) to keep a result
+  disallowed_domains:
+    - youtube.com
+    - youtu.be
+    # Add more domains to exclude:
+    # - example.com
+    # - spam-site.com
+
+# Cache Configuration
+cache:
+  directory: "cache_async"  # Directory to store cached content
+  enabled: true             # Enable/disable caching
+
+# Proxy Configuration (optional)
+proxy:
+  use_proxies: false
+  proxies: []  # Example: ["http://user:pass@ip:port", "http://proxy2.com:8080"]
+
+# Paths
+paths:
+  prompts_file: "prompts.yaml"  # Relative to config file or absolute path
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+
+# ============================================================================
+# PRESET CONFIGURATIONS
+# ============================================================================
+
+# Fast Mode (copy values above to use):
+# search:
+#   num_better_queries: 5
+#   max_results_per_query: 3
+# filtering:
+#   min_relevance_score: 2
+# llm_tokens:
+#   summarize_content: 1500
+#   merge_summaries: 3000
+
+# High Quality Mode (copy values above to use):
+# search:
+#   num_better_queries: 15
+#   max_results_per_query: 8
+# filtering:
+#   min_relevance_score: 4
+# llm_tokens:
+#   summarize_content: 3000
+#   merge_summaries: 6000
+#   coverage_check: 2000
+
+# Debug Mode (copy values above to use):
+# logging:
+#   level: "DEBUG"
+# fetching:
+#   max_concurrent_fetches: 5  # Lower for easier debugging
+

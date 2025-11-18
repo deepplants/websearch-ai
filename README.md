@@ -1,133 +1,349 @@
-# Python Project Template
+# WebSearch AI
 
-A modern Python 2025+ project template with best practices.
-
-> **📖 Want to use this template?** See [docs/USING_TEMPLATE.md](docs/USING_TEMPLATE.md) for detailed instructions on creating a new project from this template.
+A modular and configurable web search library with LLM summarization powered by OpenAI and DuckDuckGo.
 
 ## Features
 
-- 🐍 Python 3.12+
-- 📦 Modern packaging with `pyproject.toml` and `uv`
-- ✅ Testing with `pytest` and coverage
-- 🎨 Code formatting and linting with `ruff` (replaces Black, Isort, Flake8)
-- 🔒 Pre-commit hooks
-- 🚀 CI/CD with GitHub Actions
-- 📝 Type hints throughout (checked with Pyright)
+- 🔍 **Web Search**: Integrated DuckDuckGo search engine
+- 🤖 **LLM Integration**: OpenAI-powered content summarization
+- ⚡ **Async/Await**: Fast asynchronous HTTP operations
+- 🎯 **Content Extraction**: Trafilatura-based HTML content extraction
+- 💾 **Caching**: Built-in cache management for efficiency
+- 🛡️ **Robots.txt**: Respectful crawling with robots.txt compliance
+- 🔧 **Configurable**: YAML-based configuration system
+- 📦 **Modular**: Clean architecture with dependency injection
 
-## Quick Start (Using This Template)
+## Installation
 
-### Option 1: GitHub Template (Easiest)
+### From PyPI (once published)
 
-1. Click **"Use this template"** on GitHub
-2. Create your new repository
-3. Clone it and run:
-   ```bash
-   ./scripts/setup.sh
-   ```
-
-### Option 2: Manual Setup
-
-See [docs/USING_TEMPLATE.md](docs/USING_TEMPLATE.md) for complete instructions.
-
----
-
-## Setup (After Creating Your Project)
-
-### Prerequisites
-
-- Python 3.12 or higher
-- [uv](https://github.com/astral-sh/uv) (Python package installer)
-
-### Installation
-
-1. Install dependencies:
 ```bash
-uv sync --all-extras
+pip install websearch-ai
 ```
 
-2. Install pre-commit hooks (optional but recommended):
+### From Source
+
 ```bash
-uv run pre-commit install
+# Clone the repository
+git clone <your-repo-url>
+cd workdir
+
+# Install with uv (recommended)
+uv pip install -e .
+
+# Or with pip
+pip install -e .
+```
+
+### Development Installation
+
+```bash
+# Install with development dependencies
+uv pip install -e ".[dev]"
+
+# Or with pip
+pip install -e ".[dev]"
+```
+
+## Quick Start
+
+### As a Library
+
+```python
+import asyncio
+from websearch_ai import WebSearchPipeline, Settings
+
+async def main():
+    # Initialize with settings
+    settings = Settings.from_env()  # Loads from environment variables
+    pipeline = WebSearchPipeline(settings)
+    
+    # Run a search
+    results, answer = await pipeline.run("What are the latest AI developments?")
+    
+    # Process results
+    print(f"Final Answer: {answer}")
+    for result in results:
+        print(f"- {result.title}: {result.url}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### As a CLI Tool
+
+```bash
+# Set your OpenAI API key
+export OPENAI_API_KEY='your-api-key-here'
+
+# Run a search
+websearch-ai "latest nvidia earnings 2025"
+
+# Or use as a module
+python -m websearch_ai.cli "your search query"
+```
+
+## Configuration
+
+### Environment Variables
+
+```bash
+# Required
+export OPENAI_API_KEY='your-api-key-here'
+
+# Optional
+export OPENAI_MODEL='gpt-4o-mini'  # Default model
+export LOG_LEVEL='INFO'  # Logging level
+```
+
+### YAML Configuration
+
+Create a `config.yaml` file (see `src/websearch_ai/config/config.example.yaml` for full options):
+
+```yaml
+openai:
+  api_key: ${OPENAI_API_KEY}
+  model: gpt-4o-mini
+  
+search:
+  max_results: 5
+  timeout: 30
+  
+cache:
+  enabled: true
+  ttl: 86400
+```
+
+## API Reference
+
+### Core Classes
+
+#### `WebSearchPipeline`
+
+Main pipeline for orchestrating web search and summarization.
+
+```python
+from websearch_ai import WebSearchPipeline, Settings
+
+settings = Settings.from_env()
+pipeline = WebSearchPipeline(settings)
+results, answer = await pipeline.run("query")
+```
+
+#### `Settings`
+
+Configuration management using Pydantic.
+
+```python
+from websearch_ai import Settings
+
+# From environment variables
+settings = Settings.from_env()
+
+# From YAML file
+settings = Settings.from_yaml("config.yaml")
+```
+
+#### `SearchResult`
+
+Data model for search results.
+
+```python
+from websearch_ai import SearchResult
+
+result = SearchResult(
+    title="Example",
+    url="https://example.com",
+    snippet="Description",
+    content="Full content"
+)
+```
+
+### Managers
+
+#### `CacheManager`
+
+Manages caching of search results and content.
+
+```python
+from websearch_ai import CacheManager
+
+cache = CacheManager(cache_dir=".cache", ttl=86400)
+await cache.get("key")
+await cache.set("key", "value")
+```
+
+#### `PromptManager`
+
+Manages LLM prompts from YAML files.
+
+```python
+from websearch_ai import PromptManager
+
+prompts = PromptManager("prompts.yaml")
+prompt = prompts.get("search_prompt", query="test")
+```
+
+#### `RobotsChecker`
+
+Checks robots.txt compliance before fetching.
+
+```python
+from websearch_ai import RobotsChecker
+
+checker = RobotsChecker()
+allowed = await checker.can_fetch("https://example.com")
+```
+
+### Clients
+
+#### `SearchEngine`
+
+DuckDuckGo search integration.
+
+```python
+from websearch_ai import SearchEngine
+
+engine = SearchEngine(max_results=5)
+results = await engine.search("query")
+```
+
+#### `HTTPFetcher`
+
+Async HTTP client with rate limiting.
+
+```python
+from websearch_ai import HTTPFetcher
+
+fetcher = HTTPFetcher(timeout=30)
+html = await fetcher.fetch("https://example.com")
+```
+
+#### `LLMClient`
+
+OpenAI API client wrapper.
+
+```python
+from websearch_ai import LLMClient
+
+client = LLMClient(api_key="key", model="gpt-4o-mini")
+response = await client.complete("prompt")
 ```
 
 ## Development
+
+### Setup
+
+```bash
+# Install development dependencies
+uv pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
 
 ### Running Tests
 
 ```bash
 # Run all tests
-uv run dev-test
+pytest
 
-# Run tests with coverage
-uv run dev-test-cov
+# Run with coverage
+pytest --cov=websearch_ai --cov-report=html
+
+# Run specific test file
+pytest src/websearch_ai/tests/test_models.py
 ```
 
 ### Code Quality
 
 ```bash
-# Format code (Ruff replaces Black + Isort)
-uv run dev-format
+# Format code
+ruff format .
 
-# Run linting
-uv run dev-lint
+# Run linter
+ruff check .
 
-# Clean build artifacts
-uv run dev-clean
+# Fix linting issues
+ruff check --fix .
 ```
 
-### Available Scripts
+## Requirements
 
-All development scripts are defined in `pyproject.toml` and can be run with `uv run`:
-- `dev-test` - Run tests
-- `dev-test-cov` - Run tests with coverage
-- `dev-lint` - Run linting checks (Ruff)
-- `dev-format` - Format code (Ruff formatter)
-- `dev-clean` - Clean build artifacts
+- Python 3.12+
+- OpenAI API key
+- Internet connection
 
-> **Note:** Type checking is handled by Pyright (default in VS Code/Cursor). If you prefer using a Makefile, you can keep the provided `Makefile` as a convenience wrapper. However, all functionality is available through the `pyproject.toml` scripts.
+## Dependencies
+
+Core dependencies:
+- `openai>=1.0.0` - OpenAI API client
+- `pydantic>=2.0.0` - Data validation and settings
+- `aiohttp>=3.9.0` - Async HTTP client
+- `aiofiles>=23.0.0` - Async file operations
+- `pyyaml>=6.0` - YAML configuration
+- `ddgs>=0.1.0` - DuckDuckGo search
+- `trafilatura>=1.6.0` - Content extraction
+
+Development dependencies:
+- `pytest>=7.0` - Testing framework
+- `pytest-cov>=4.0` - Coverage reporting
+- `pytest-asyncio>=0.21.0` - Async test support
+- `ruff>=0.1.6` - Linting and formatting
+- `pre-commit>=3.0` - Git hooks
 
 ## Project Structure
 
 ```
-template_project/
-├── docs/
-│   ├── CHANGELOG.md
-│   └── CONTRIBUTING.md
-├── src/
-│   └── template_project/
-│       ├── __init__.py
-│       └── main.py
-├── scripts/
-│   ├── __init__.py
-│   ├── __main__.py
-│   └── setup.sh
-├── tests/
-│   ├── __init__.py
-│   └── test_main.py
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── .pre-commit-config.yaml
-├── pyproject.toml
-├── pyrightconfig.json
-├── README.md
-├── LICENSE
-└── uv.lock
+src/websearch_ai/
+├── __init__.py           # Package exports
+├── cli.py                # Command-line interface
+├── config/               # Configuration management
+│   ├── settings.py
+│   └── config.yaml
+├── core/                 # Core pipeline logic
+│   ├── models.py
+│   └── pipeline.py
+├── clients/              # External service clients
+│   ├── http.py
+│   ├── llm.py
+│   └── search.py
+├── managers/             # Resource managers
+│   ├── cache.py
+│   ├── prompts.py
+│   └── robots.py
+├── filters/              # URL and content filters
+│   └── url_filter.py
+├── prompts/              # LLM prompt templates
+│   └── prompts.yaml
+├── tests/                # Test suite
+└── docs/                 # Documentation
 ```
+
+## Examples
+
+See the `src/websearch_ai/examples/` directory for more usage examples.
 
 ## Contributing
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Quick start:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
-4. Run tests and linting (`uv run dev-test` and `uv run dev-lint`)
-5. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Run tests and linting
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+
+Davide Palleschi (davide@deepplants.com)
+
+## Changelog
+
+See [CHANGELOG.md](docs/CHANGELOG.md) for version history and updates.

@@ -1,0 +1,17 @@
+# Web Search Pipeline v2.0 - Dependencies
+
+# Core dependencies
+openai>=1.0.0              # OpenAI API client
+pydantic>=2.0.0            # Data validation and settings
+aiohttp>=3.9.0             # Async HTTP client
+aiofiles>=23.0.0           # Async file operations
+pyyaml>=6.0                # YAML configuration
+
+# Search and content extraction
+ddgs>=0.1.0                # DuckDuckGo search (duckduckgo-search)
+trafilatura>=1.6.0         # Content extraction from HTML
+
+# Optional dependencies
+# certifi>=2023.0.0        # SSL certificates (usually included)
+# charset-normalizer>=3.0  # Character encoding detection
+
