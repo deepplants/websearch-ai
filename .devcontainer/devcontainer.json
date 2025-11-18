@@ -1,0 +1,40 @@
+{
+  "name": "cursor-${localEnv:USER}-${localWorkspaceFolderBasename}-container",
+  "image": "ghcr.io/deepplants/cuda-dev:latest",
+  "remoteUser": "developer", 
+  "runArgs": [
+    "--name=cursor-${localEnv:USER}-${localWorkspaceFolderBasename}-container",
+    "--group-add=1006",
+    "--gpus=all",
+    "--ipc=host",
+    "--network=host"
+  ],
+  
+  "workspaceFolder": "/home/developer/workdir",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/developer/workdir,type=bind,consistency=cached",
+
+  "mounts": [
+    "source=/home/shared/datasets/agribench,target=/home/developer/workdir/datasets,type=bind",
+    "source=${localEnv:HOME}/.ssh,target=/home/developer/.ssh,type=bind,consistency=cached"
+  ],
+
+  "remoteEnv": {
+    "SSH_AUTH_SOCK": "/tmp/ssh-agent.sock"
+  },
+
+  "postCreateCommand": ["bash",
+    "-c", 
+    "echo '🚀 Setting up project with uv...'; export PATH=$HOME/.local/bin:$PATH; if [ -f pyproject.toml ]; then uv sync --frozen || uv sync; echo '✅ Environment ready via uv'; else echo '⚠️  No pyproject.toml found, skipping uv sync'; fi"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "charliermarsh.ruff"
+      ]
+    }
+  }
+}

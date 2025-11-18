@@ -1,0 +1,13 @@
+{
+    "exclude": [
+      "**/.git",
+      "**/__pycache__",
+      "**/node_modules",
+      "**/venv",
+      "**/build",
+      "**/dist",
+      "**/.devcontainer",
+      "**/datasets"
+    ]
+  }
+  
