@@ -1,9 +1,8 @@
 """
 Pytest configuration and shared fixtures.
 """
-import os
+
 import pytest
-from pathlib import Path
 from websearch.config import Settings
 
 
@@ -36,7 +35,7 @@ def mock_settings(temp_cache_dir):
         search_max_results_per_query=2,
         min_relevance_score=1,
         disallowed_domains=["youtube.com"],
-        log_level="ERROR"  # Quiet during tests
+        log_level="ERROR",  # Quiet during tests
     )
 
 
@@ -44,6 +43,7 @@ def mock_settings(temp_cache_dir):
 def sample_search_results():
     """Sample search results for testing."""
     from websearch.core import SearchResult
+
     return [
         SearchResult(
             better_query="test query 1",
@@ -52,7 +52,7 @@ def sample_search_results():
             snippet="This is a test snippet 1",
             relevance=4,
             complete_text="Full text content 1",
-            summary="Summary of result 1"
+            summary="Summary of result 1",
         ),
         SearchResult(
             better_query="test query 2",
@@ -61,8 +61,8 @@ def sample_search_results():
             snippet="This is a test snippet 2",
             relevance=5,
             complete_text="Full text content 2",
-            summary="Summary of result 2"
-        )
+            summary="Summary of result 2",
+        ),
     ]
 
 
@@ -72,7 +72,7 @@ def mock_prompts_yaml(tmp_path):
     prompts_dir = tmp_path / "prompts"
     prompts_dir.mkdir()
     prompts_file = prompts_dir / "prompts.yaml"
-    
+
     content = """
 better_queries_prompt: |
   Generate better search queries for: {query}
@@ -91,4 +91,3 @@ merge_summaries_prompt: |
 """
     prompts_file.write_text(content)
     return prompts_file
-

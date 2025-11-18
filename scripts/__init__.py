@@ -8,5 +8,3 @@ from scripts.__main__ import (  # noqa: F401
     test,
     test_cov,
 )
-
-

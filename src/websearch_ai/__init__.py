@@ -1,11 +1,12 @@
 """
 Web Search Pipeline - Modular and configurable web search with LLM summarization.
 """
-from .config import Settings
-from .core import SearchResult, BetterQueries, WebSearchPipeline
-from .managers import CacheManager, PromptManager, RobotsChecker
+
 from .clients import HTTPFetcher, LLMClient, SearchEngine
+from .config import Settings
+from .core import BetterQueries, SearchResult, WebSearchPipeline
 from .filters import URLFilter
+from .managers import CacheManager, PromptManager, RobotsChecker
 
 __version__ = "2.0.0"
 
